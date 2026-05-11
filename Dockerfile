@@ -1,5 +1,5 @@
 # Stage 1: Build PHP dependencies
-FROM php:8.2-fpm-alpine AS php_builder
+FROM php:8.4-fpm-alpine AS php_builder
 
 WORKDIR /var/www/html
 
@@ -29,7 +29,7 @@ RUN npm run build
 
 # ---
 # Stage 3: Final Production Image
-FROM php:8.2-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 WORKDIR /var/www/html
 
@@ -86,7 +86,7 @@ COPY --from=assets_builder /app/public/build ./public/build
 
 # Finish composer autoload
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN composer dump-autoload --optimize
+RUN composer dump-autoload --optimize --ignore-platform-reqs
 
 # Configure Nginx
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
