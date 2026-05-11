@@ -145,10 +145,16 @@
             @foreach($wishlists as $wishlist)
                 @php $product = $wishlist->product; @endphp
                 <div class="product-card">
-                    @if($product->img)
-                        <img src="{{ asset('storage/' . $product->img) }}" alt="{{ $product->name }}" style="width:100%;height:200px;object-fit:cover;">
+                    @php
+                        $thumbnailUrl = $product->getFirstMediaUrl('thumbnail');
+                        if (!$thumbnailUrl && $product->img) {
+                            $thumbnailUrl = asset('storage/' . $product->img);
+                        }
+                    @endphp
+                    @if($thumbnailUrl)
+                        <img src="{{ $thumbnailUrl }}" alt="{{ $product->name }}" style="width:100%;height:200px;object-fit:cover;">
                     @else
-                        <div class="product-card-img-placeholder">🖼️</div>
+                        <div style="height:200px; background:var(--surface-container-highest); display:flex; align-items:center; justify-content:center; color:var(--on-surface-variant);">No Image</div>
                     @endif
 
                     <div class="product-card-body">

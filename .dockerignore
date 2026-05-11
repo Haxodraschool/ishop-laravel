@@ -1,0 +1,13 @@
+/vendor
+/node_modules
+/public/storage
+/public/build
+/storage/*.key
+.env
+.git
+.gitignore
+Dockerfile
+docker/
+.phpunit.result.cache
+phpunit.xml
+tests/

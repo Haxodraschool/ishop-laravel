@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: ishop
+    env: docker
+    plan: free # or starter/standard
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        fromContext: git.url
+      - key: APP_KEY
+        generateValue: true
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromService:
+          name: ishop-db
+          type: mysql
+          property: host
+      - key: DB_DATABASE
+        fromService:
+          name: ishop-db
+          type: mysql
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          name: ishop-db
+          type: mysql
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          name: ishop-db
+          type: mysql
+          property: password
+    # Pre-deploy command to run migrations
+    # Note: Requires the DB to be reachable
+    # preDeployCommand: php artisan migrate --force
+
+databases:
+  - name: ishop-db
+    databaseName: ishop
+    plan: free
+    type: mysql # Render managed MySQL (Note: MySQL is available on Render, but PostgreSQL is more common there)

@@ -53,8 +53,15 @@
                         <div class="glass-panel animate-fade-up" style="padding: 24px; display: flex; flex-direction: column; transition-delay: {{ ($index % 4) * 0.1 }}s;">
                             <a href="/products/{{ $product->slug }}" style="text-decoration: none; color: inherit; display: block; flex: 1;">
                                 <div style="border-radius: 16px; overflow: hidden; margin-bottom: 24px; height: 240px; background: white; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                                    @if($product->img)
-                                        <img src="{{ asset('storage/' . $product->img) }}" alt="{{ $product->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                    @php
+                                        $thumbnailUrl = $product->getFirstMediaUrl('thumbnail');
+                                        if (!$thumbnailUrl && $product->img) {
+                                            $thumbnailUrl = asset('storage/' . $product->img);
+                                        }
+                                    @endphp
+
+                                    @if($thumbnailUrl)
+                                        <img src="{{ $thumbnailUrl }}" alt="{{ $product->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                                     @else
                                         <div style="color: var(--surface-container-highest);">Không có ảnh</div>
                                     @endif

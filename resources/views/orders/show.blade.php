@@ -60,10 +60,16 @@
                     @foreach($order->orderItems as $item)
                         <div style="display: flex; align-items: center; gap: 24px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 24px;">
                             <div style="width: 80px; height: 80px; background: white; border-radius: 12px; display: flex; justify-content: center; align-items: center; padding: 10px;">
-                                @if($item->product->img)
-                                    <img src="{{ asset('storage/' . $item->product->img) }}" alt="{{ $item->product->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                @php
+                                    $thumbnailUrl = $item->product->getFirstMediaUrl('thumbnail');
+                                    if (!$thumbnailUrl && $item->product->img) {
+                                        $thumbnailUrl = asset('storage/' . $item->product->img);
+                                    }
+                                @endphp
+                                @if($thumbnailUrl)
+                                    <img src="{{ $thumbnailUrl }}" alt="{{ $item->product->name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                                 @else
-                                    <div style="color: var(--surface-container-highest);">N/A</div>
+                                    <div style="color: var(--on-surface-variant); font-size: 0.8rem;">No img</div>
                                 @endif
                             </div>
                             <div style="flex: 1;">

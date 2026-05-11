@@ -6,8 +6,15 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-bottom: 120px;">
         <!-- Image Side -->
         <div class="animate-fade-up glass-panel hover-glow" style="position: sticky; top: 120px; background: var(--surface-container-lowest); padding: 40px; display: flex; justify-content: center; align-items: center; min-height: 600px; border-radius: 24px; overflow: hidden;">
-            @if($product->img)
-                <img src="{{ asset('storage/' . $product->img) }}" alt="{{ $product->name }}" style="max-width: 100%; height: auto; mix-blend-mode: lighten; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            @php
+                $thumbnailUrl = $product->getFirstMediaUrl('thumbnail');
+                if (!$thumbnailUrl && $product->img) {
+                    $thumbnailUrl = asset('storage/' . $product->img);
+                }
+            @endphp
+
+            @if($thumbnailUrl)
+                <img src="{{ $thumbnailUrl }}" alt="{{ $product->name }}" style="max-width: 100%; height: auto; mix-blend-mode: lighten; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
             @else
                 <div style="color: var(--on-surface-variant); font-size: 2rem; font-weight: 300;">Chưa cập nhật hình ảnh</div>
             @endif
