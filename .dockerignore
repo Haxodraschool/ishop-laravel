@@ -10,3 +10,14 @@ Dockerfile
 .phpunit.result.cache
 phpunit.xml
 tests/
+README.md
+.editorconfig
+.vscode
+.github
+docker-compose.yml
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+npm-debug.log
+yarn-error.log

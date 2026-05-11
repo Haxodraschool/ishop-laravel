@@ -3,36 +3,16 @@ FROM php:8.2-fpm-alpine AS php_builder
 
 WORKDIR /var/www/html
 
-# Install system dependencies for PHP extensions
-RUN apk add --no-cache \
-    icu-dev \
-    libpng-dev \
-    libzip-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    oniguruma-dev \
-    libxml2-dev
-
-# Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
-    intl \
-    gd \
-    zip \
-    pdo_mysql \
-    bcmath \
-    mbstring \
-    exif \
-    pcntl \
-    xml
+# Install minimal dependencies for composer
+RUN apk add --no-cache libzip-dev libpng-dev
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy only composer files to leverage Docker cache
+# Copy only composer files
 COPY composer.json composer.lock ./
 
-# Install dependencies without scripts to avoid errors with missing code
+# Install dependencies
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 # ---
@@ -53,21 +33,45 @@ FROM php:8.2-fpm-alpine
 
 WORKDIR /var/www/html
 
-# Install runtime dependencies
+# Install runtime & build dependencies
 RUN apk add --no-cache \
     nginx \
     supervisor \
+    bash \
     icu-libs \
     libpng \
     libjpeg-turbo \
     freetype \
     libzip \
-    bash
+    libxml2 \
+    oniguruma \
+    # Build-only dependencies
+    icu-dev \
+    libpng-dev \
+    libzip-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    $PHPIZE_DEPS
 
-# Install PHP extensions for runtime
-RUN docker-php-ext-install pdo_mysql intl gd zip exif bcmath
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+    intl \
+    gd \
+    zip \
+    pdo_mysql \
+    bcmath \
+    exif \
+    pcntl \
+    mbstring \
+    xml
 
-# Copy code from main directory
+# Clean up build-only dependencies to reduce size
+RUN apk del icu-dev libpng-dev libzip-dev libjpeg-turbo-dev freetype-dev oniguruma-dev libxml2-dev $PHPIZE_DEPS
+
+# Copy code
 COPY . .
 
 # Copy composer dependencies from Stage 1
