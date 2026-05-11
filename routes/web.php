@@ -13,6 +13,11 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 
+// Healthcheck for Railway/Render
+Route::get('/health', function () {
+    return response('OK', 200);
+});
+
 // Public
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/products', [ProductController::class, 'index']);
@@ -42,18 +47,3 @@ Route::middleware('auth')->group(function () {
     Route::post('/wishlist/add', [WishlistController::class, 'add']);
     Route::post('/wishlist/remove', [WishlistController::class, 'remove']);
 });
-
-// Admin routes are now handled by Filament (app/Providers/Filament/AdminPanelProvider.php)
-/*
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::resource('/products', AdminProductController::class);
-    Route::resource('/categories', AdminCategoryController::class);
-    Route::get('/orders', [AdminOrderController::class, 'index']);
-    Route::get('/orders/{id}', [AdminOrderController::class, 'show']);
-    Route::put('/orders/{id}/status', [AdminOrderController::class, 'updateStatus']);
-    Route::get('/users', [AdminUserController::class, 'index']);
-    Route::get('/users/{id}', [AdminUserController::class, 'show']);
-    Route::put('/users/{id}/role', [AdminUserController::class, 'updateRole']);
-});
-*/

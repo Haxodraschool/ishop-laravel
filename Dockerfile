@@ -9,6 +9,9 @@ RUN apk add --no-cache libzip-dev libpng-dev
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Env for composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Copy only composer files
 COPY composer.json composer.lock ./
 
@@ -32,6 +35,9 @@ RUN npm run build
 FROM php:8.4-fpm-alpine
 
 WORKDIR /var/www/html
+
+# Env for composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Install runtime & build dependencies
 RUN apk add --no-cache \
