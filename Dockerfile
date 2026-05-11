@@ -82,7 +82,7 @@ COPY . .
 COPY --from=php_builder /var/www/html/vendor ./vendor
 
 # Copy assets from Stage 2
-COPY --from=assets_builder /app/public/build ./build
+COPY --from=assets_builder /app/public/build ./public/build
 
 # Finish composer autoload
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
