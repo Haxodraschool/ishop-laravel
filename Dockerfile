@@ -80,6 +80,9 @@ RUN apk del icu-dev libpng-dev libzip-dev libjpeg-turbo-dev freetype-dev oniguru
 # Copy code
 COPY . .
 
+# Backup initial storage for volume initialization
+RUN mkdir -p storage_initial && cp -R storage/app/public/* storage_initial/ || true
+
 # Copy composer dependencies from Stage 1
 COPY --from=php_builder /var/www/html/vendor ./vendor
 

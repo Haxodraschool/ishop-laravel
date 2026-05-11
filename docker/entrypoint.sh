@@ -31,6 +31,13 @@ php artisan migrate --force --no-interaction || echo "Migration failed, check DB
 echo "Creating storage link..."
 php artisan storage:link --force || true
 
+# Initialize volume if empty
+if [ -d "/var/www/html/storage_initial" ] && [ -z "$(ls -A /var/www/html/storage/app/public)" ]; then
+    echo "Initializing storage volume with seed images..."
+    cp -R /var/www/html/storage_initial/* /var/www/html/storage/app/public/
+    chown -R www-data:www-data /var/www/html/storage/app/public
+fi
+
 # Start Supervisor (which will start PHP-FPM and Nginx)
 echo "Starting Supervisor..."
 exec /usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf
