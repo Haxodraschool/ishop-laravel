@@ -29,13 +29,20 @@ php artisan migrate --force --no-interaction || echo "Migration failed, check DB
 
 # Create symbolic link for storage
 echo "Creating storage link..."
-php artisan storage:link --force || true
+# Ensure the public/storage is removed if it's a directory or broken link before recreating
+rm -rf public/storage
+php artisan storage:link --force || echo "Storage link failed"
 
-# Initialize volume if empty
-if [ -d "/var/www/html/storage_initial" ] && [ -z "$(ls -A /var/www/html/storage/app/public)" ]; then
+# Initialize volume if not already done
+if [ -d "/var/www/html/storage_initial" ] && [ ! -f "/var/www/html/storage/app/public/.initialized" ]; then
     echo "Initializing storage volume with seed images..."
-    cp -R /var/www/html/storage_initial/* /var/www/html/storage/app/public/
+    # Use -a to preserve permissions and copy everything including subdirectories
+    cp -a /var/www/html/storage_initial/. /var/www/html/storage/app/public/
+    touch /var/www/html/storage/app/public/.initialized
     chown -R www-data:www-data /var/www/html/storage/app/public
+    echo "Storage volume initialized."
+else
+    echo "Storage volume already initialized or no backup found."
 fi
 
 # Start Supervisor (which will start PHP-FPM and Nginx)
