@@ -1,61 +1,72 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🛍️ iShop - Laravel E-commerce Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Dự án website bán hàng được xây dựng bằng Laravel, đã được tối ưu hóa để triển khai (deploy) lên **Railway** bằng Docker.
 
-## About Laravel
+## 🚀 Hướng dẫn Deployment lên Railway
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Dự án này đã bao gồm đầy đủ cấu hình Docker và Railway.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Các file cấu hình quan trọng
+- **`Dockerfile`**: Sử dụng PHP 8.4-fpm-alpine, tối ưu hóa multi-stage build để giảm dung lượng image.
+- **`railway.json`**: Cấu hình healthcheck qua route `/health` để đảm bảo quá trình deploy ổn định.
+- **`docker/entrypoint.sh`**: Tự động nhận diện Port, chạy migration, cache ứng dụng và khởi động Supervisor.
+- **`docker/nginx/default.conf`**: Cấu hình Nginx tối ưu cho Laravel.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Biến môi trường (Variables)
+Cần thiết lập các biến sau trên Railway:
 
-## Learning Laravel
+```text
+APP_NAME=ishop
+APP_ENV=production
+APP_KEY=base64:klClw9pN74x07EAUhUoZC+XqYrKinDhI8aCSt+8tnUQ=
+APP_DEBUG=false
+APP_URL=https://your-app-url.up.railway.app
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+DB_CONNECTION=mysql
+DB_HOST=${{MySQL.MYSQLHOST}}
+DB_PORT=3306
+DB_DATABASE=railway
+DB_USERNAME=root
+DB_PASSWORD=ExvRoDSEDtmdzXQgorHOxXJhCAvEfhCU
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+FILESYSTEM_DISK=public
+LOG_CHANNEL=errorlog
+```
 
-## Laravel Sponsors
+### 3. Cấu hình Volume (Lưu trữ ảnh)
+Để ảnh sản phẩm không bị mất khi deploy lại, hãy gắn một Volume trên Railway:
+- **Mount Path**: `/var/www/html/storage/app/public`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🗄️ Quản lý Database
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Kết nối Database Cloud (MySQL)
+Sử dụng TablePlus hoặc DBeaver với các thông số:
+- **Host**: `viaduct.proxy.rlwy.net`
+- **Port**: `31617`
+- **User**: `root`
+- **Password**: `ExvRoDSEDtmdzXQgorHOxXJhCAvEfhCU`
+- **Database**: `railway`
 
-## Contributing
+### Lệnh đồng bộ dữ liệu từ Local lên Cloud
+Chạy lệnh này tại terminal máy local để đẩy toàn bộ dữ liệu hiện tại lên Cloud:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+mysqldump -u root ishop | mysql -h viaduct.proxy.rlwy.net -P 31617 -u root -pExvRoDSEDtmdzXQgorHOxXJhCAvEfhCU railway
+```
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🛠️ Phát triển cục bộ (Local)
 
-## Security Vulnerabilities
+1. Clone dự án.
+2. Chạy `composer install` và `npm install`.
+3. Cấu hình `.env` trỏ về MySQL local.
+4. Chạy `php artisan migrate --seed`.
+5. Chạy `php artisan serve` và `npm run dev`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# Laravelproject
-# ishop-laravel
+## 📄 Giấy phép
+Dự án được phát triển dựa trên Laravel Framework (MIT License).
