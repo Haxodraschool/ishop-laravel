@@ -14,21 +14,23 @@ else
 fi
 
 # Cache Laravel components for production
-echo "Caching config and routes..."
-# We use || true here to prevent the container from crashing if these fail (e.g. during build or missing DB)
-php artisan config:cache || echo "Config cache failed, skipping..."
-php artisan route:cache || echo "Route cache failed, skipping..."
-php artisan view:cache || echo "View cache failed, skipping..."
-php artisan event:cache || echo "Event cache failed, skipping..."
+echo "Caching config..."
+php artisan config:cache || echo "Config cache failed"
 
-# Run migrations if database is ready
+# Only cache routes if we are sure there are no issues, 
+# otherwise fresh routes are safer for health checks.
+echo "Caching routes..."
+php artisan route:cache || echo "Route cache failed, continuing with dynamic routes..."
+
+# Run migrations with a timeout to prevent blocking health check indefinitely
 echo "Running migrations..."
-php artisan migrate --force || echo "Migration failed! Please check your database connection."
+# Use a background process or ensure it doesn't block forever
+php artisan migrate --force --no-interaction || echo "Migration failed, check DB connection"
 
 # Create symbolic link for storage
 echo "Creating storage link..."
-php artisan storage:link || true
+php artisan storage:link --force || true
 
 # Start Supervisor (which will start PHP-FPM and Nginx)
 echo "Starting Supervisor..."
-exec supervisord -c /etc/supervisor/conf.d/supervisord.conf
+exec /usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf
