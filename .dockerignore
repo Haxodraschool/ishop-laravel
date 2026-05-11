@@ -7,7 +7,6 @@
 .git
 .gitignore
 Dockerfile
-docker/
 .phpunit.result.cache
 phpunit.xml
 tests/
