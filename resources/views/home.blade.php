@@ -192,7 +192,12 @@
             <div class="glass-panel animate-fade-up delay-1" style="padding: 24px; display: flex; flex-direction: column;">
                 <a href="/products/{{ isset($featuredProducts['iPhone 17 Pro Max']) ? $featuredProducts['iPhone 17 Pro Max']->slug : '#' }}" style="text-decoration: none; color: inherit; display: block; flex: 1;">
                     <div style="border-radius: 16px; overflow: hidden; margin-bottom: 24px; height: 240px; background: white; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                        <img src="{{ isset($featuredProducts['iPhone 17 Pro Max']) ? $featuredProducts['iPhone 17 Pro Max']->getFirstMediaUrl('thumbnail') ?: asset('storage/' . $featuredProducts['iPhone 17 Pro Max']->img) : asset('storage/productsimg/iphone17promax.jpeg') }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        @php
+                            $imageUrl = isset($featuredProducts['iPhone 17 Pro Max']) 
+                                ? $featuredProducts['iPhone 17 Pro Max']->getFirstMediaUrl('thumbnail') 
+                                : asset('storage/categoryimg/iphone.jpeg');
+                        @endphp
+                        <img src="{{ $imageUrl }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                     </div>
                     <h3 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; font-weight: 700;">iPhone 17 Pro Max</h3>
                     <p style="color: var(--on-surface-variant); margin-bottom: 16px; font-size: 0.95rem;">Thiết kế titan đẳng cấp, sức mạnh vượt bậc.</p>
@@ -212,7 +217,12 @@
             <div class="glass-panel animate-fade-up delay-2" style="padding: 24px; display: flex; flex-direction: column;">
                 <a href="/products/{{ isset($featuredProducts['MacBook Pro M5']) ? $featuredProducts['MacBook Pro M5']->slug : '#' }}" style="text-decoration: none; color: inherit; display: block; flex: 1;">
                     <div style="border-radius: 16px; overflow: hidden; margin-bottom: 24px; height: 240px; background: white; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                        <img src="{{ isset($featuredProducts['MacBook Pro M5']) ? $featuredProducts['MacBook Pro M5']->getFirstMediaUrl('thumbnail') ?: asset('storage/' . $featuredProducts['MacBook Pro M5']->img) : asset('storage/productsimg/macbookm5.jpg') }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        @php
+                            $imageUrl = isset($featuredProducts['MacBook Pro M5']) 
+                                ? $featuredProducts['MacBook Pro M5']->getFirstMediaUrl('thumbnail') 
+                                : asset('storage/categoryimg/macbook.jpg');
+                        @endphp
+                        <img src="{{ $imageUrl }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                     </div>
                     <h3 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; font-weight: 700;">MacBook Pro M5</h3>
                     <p style="color: var(--on-surface-variant); margin-bottom: 16px; font-size: 0.95rem;">Hiệu năng vô song cho dân chuyên nghiệp.</p>
@@ -232,7 +242,12 @@
             <div class="glass-panel animate-fade-up delay-3" style="padding: 24px; display: flex; flex-direction: column;">
                 <a href="/products/{{ isset($featuredProducts['iPad Pro 11-inch']) ? $featuredProducts['iPad Pro 11-inch']->slug : '#' }}" style="text-decoration: none; color: inherit; display: block; flex: 1;">
                     <div style="border-radius: 16px; overflow: hidden; margin-bottom: 24px; height: 240px; background: white; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                        <img src="{{ isset($featuredProducts['iPad Pro 11-inch']) ? $featuredProducts['iPad Pro 11-inch']->getFirstMediaUrl('thumbnail') ?: asset('storage/' . $featuredProducts['iPad Pro 11-inch']->img) : asset('storage/productsimg/ipadpro11.jpg') }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        @php
+                            $imageUrl = isset($featuredProducts['iPad Pro 11-inch']) 
+                                ? $featuredProducts['iPad Pro 11-inch']->getFirstMediaUrl('thumbnail') 
+                                : asset('storage/categoryimg/ipad.jpg');
+                        @endphp
+                        <img src="{{ $imageUrl }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                     </div>
                     <h3 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; font-weight: 700;">iPad Pro 11-inch</h3>
                     <p style="color: var(--on-surface-variant); margin-bottom: 16px; font-size: 0.95rem;">Mỏng nhẹ nhất với màn hình OLED tuyệt hảo.</p>
@@ -252,7 +267,12 @@
             <div class="glass-panel animate-fade-up delay-1" style="padding: 24px; display: flex; flex-direction: column;">
                 <a href="/products/{{ isset($featuredProducts['AirPods Pro 2']) ? $featuredProducts['AirPods Pro 2']->slug : '#' }}" style="text-decoration: none; color: inherit; display: block; flex: 1;">
                     <div style="border-radius: 16px; overflow: hidden; margin-bottom: 24px; height: 240px; background: white; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                        <img src="{{ isset($featuredProducts['AirPods Pro 2']) ? $featuredProducts['AirPods Pro 2']->getFirstMediaUrl('thumbnail') ?: asset('storage/' . $featuredProducts['AirPods Pro 2']->img) : asset('storage/productsimg/airpodpro.jpg') }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        @php
+                            $imageUrl = isset($featuredProducts['AirPods Pro 2']) 
+                                ? $featuredProducts['AirPods Pro 2']->getFirstMediaUrl('thumbnail') 
+                                : asset('storage/categoryimg/airpod.jpg');
+                        @endphp
+                        <img src="{{ $imageUrl }}" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                     </div>
                     <h3 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 8px; font-weight: 700;">AirPods Pro 2</h3>
                     <p style="color: var(--on-surface-variant); margin-bottom: 16px; font-size: 0.95rem;">Khử tiếng ồn vượt trội, âm thanh không gian.</p>
