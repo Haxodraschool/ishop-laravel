@@ -4,7 +4,7 @@ FROM php:8.2-fpm-alpine AS php_builder
 WORKDIR /var/www/html
 
 # Install minimal dependencies for composer
-RUN apk add --no-cache libzip-dev libpng-dev
+RUN apk add --no-cache libzip-dev libpng-dev libpq-dev
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -45,6 +45,7 @@ RUN apk add --no-cache \
     libzip \
     libxml2 \
     oniguruma \
+    libpq \
     # Build-only dependencies
     icu-dev \
     libpng-dev \
@@ -53,6 +54,7 @@ RUN apk add --no-cache \
     freetype-dev \
     oniguruma-dev \
     libxml2-dev \
+    postgresql-dev \
     $PHPIZE_DEPS
 
 # Install PHP extensions
@@ -62,6 +64,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     gd \
     zip \
     pdo_mysql \
+    pdo_pgsql \
+    pgsql \
     bcmath \
     exif \
     pcntl \
@@ -69,7 +73,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     xml
 
 # Clean up build-only dependencies to reduce size
-RUN apk del icu-dev libpng-dev libzip-dev libjpeg-turbo-dev freetype-dev oniguruma-dev libxml2-dev $PHPIZE_DEPS
+RUN apk del icu-dev libpng-dev libzip-dev libjpeg-turbo-dev freetype-dev oniguruma-dev libxml2-dev postgresql-dev $PHPIZE_DEPS
 
 # Copy code
 COPY . .
@@ -78,7 +82,7 @@ COPY . .
 COPY --from=php_builder /var/www/html/vendor ./vendor
 
 # Copy assets from Stage 2
-COPY --from=assets_builder /app/public/build ./public/build
+COPY --from=assets_builder /app/public/build ./build
 
 # Finish composer autoload
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
