@@ -5,7 +5,7 @@
     <!-- Top Section: Image & Info -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; margin-bottom: 120px;">
         <!-- Image Side -->
-        <div class="animate-fade-up glass-panel hover-glow" style="position: sticky; top: 120px; background: var(--surface-container-lowest); padding: 40px; display: flex; justify-content: center; align-items: center; min-height: 600px; border-radius: 24px; overflow: hidden;">
+        <div class="animate-fade-up glass-panel" style="position: sticky; top: 120px; background: var(--surface-container-lowest); padding: 40px; display: flex; justify-content: center; align-items: center; min-height: 600px; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
             @php
                 $thumbnailUrl = $product->getFirstMediaUrl('thumbnail');
                 if (!$thumbnailUrl && $product->img) {

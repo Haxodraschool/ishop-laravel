@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
@@ -566,8 +567,8 @@
         </a>
 
         <nav class="nav-links">
-            <a href="/products">Sản phẩm</a>
-            <a href="/products">Danh mục</a>
+            <a href="{{ route('products.index') }}">Sản phẩm</a>
+            <a href="{{ route('collection') }}">Bộ Sưu Tập</a>
             <a href="/cart">Giỏ hàng (<span id="cart-count">{{ collect(session('cart', []))->sum('quantity') }}</span>)</a>
             @auth
                 <a href="/orders">Đơn hàng</a>

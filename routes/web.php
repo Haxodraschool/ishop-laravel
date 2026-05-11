@@ -18,10 +18,46 @@ Route::get('/health', function () {
     return response('OK', 200);
 });
 
+Route::get('/debug-images', function () {
+    $products = \App\Models\Product::all();
+    $debug = [];
+    foreach ($products as $product) {
+        $media = $product->getFirstMedia('thumbnail');
+        $debug[] = [
+            'name' => $product->name,
+            'media_id' => $media ? $media->id : 'NONE',
+            'url' => $product->getFirstMediaUrl('thumbnail'),
+            'path' => $media ? $media->getPath() : 'N/A',
+            'exists' => $media ? (file_exists($media->getPath()) ? 'YES' : 'NO') : 'N/A',
+            'public_path' => $media ? public_path('storage/' . $media->id . '/' . $media->file_name) : 'N/A',
+            'public_exists' => $media ? (file_exists(public_path('storage/' . $media->id . '/' . $media->file_name)) ? 'YES' : 'NO') : 'N/A',
+        ];
+    }
+    return response()->json($debug);
+});
+
+// Public
+Route::get('/rebuild-images', function () {
+    try {
+        $output = new \Symfony\Component\Console\Output\BufferedOutput();
+        
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--seed' => true,
+            '--force' => true,
+        ], $output);
+        
+        $log = $output->fetch();
+        return "✨ Thành công! Hệ thống đã tái cấu trúc xong.<br><pre>" . $log . "</pre><br><a href='/'>Quay về trang chủ</a>";
+    } catch (\Exception $e) {
+        return "❌ Lỗi: " . $e->getMessage();
+    }
+});
 // Public
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/collection', [ProductController::class, 'index'])->name('collection');
 Route::get('/products/{slug}', [ProductController::class, 'show']);
+
 
 // Auth routes
 Route::get('/login', [AuthController::class, 'loginForm'])->name('login')->middleware('guest');

@@ -137,9 +137,9 @@ class ProductRebuildSeeder extends Seeder
                 $product->addMedia($sourcePath)
                         ->preservingOriginal()
                         ->toMediaCollection('thumbnail');
-                $this->command->info("✅ Đã thêm ảnh cho: {$product->name}");
+                $this->command->info("✅ Đã thêm ảnh cho: {$product->name} (Path: {$sourcePath})");
             } else {
-                $this->command->warn("⚠ Không tìm thấy ảnh: {$imgSource}");
+                $this->command->warn("⚠ Không tìm thấy ảnh gốc: {$imgSource} tại {$sourcePath}");
             }
         }
 

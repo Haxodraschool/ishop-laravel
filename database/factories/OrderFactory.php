@@ -13,11 +13,11 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'     => 'Order-' . fake()->unique()->numerify('######'),
-            'desc'     => fake()->sentence(),
+            'name'     => 'Order-' . $this->faker->unique()->numerify('######'),
+            'desc'     => $this->faker->sentence(),
             'users_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
-            'status'   => fake()->randomElement([0, 1, 2, 3]),
-            'receiver' => fake()->name(),
+            'status'   => $this->faker->randomElement([0, 1, 2, 3]),
+            'receiver' => $this->faker->name(),
         ];
     }
 }

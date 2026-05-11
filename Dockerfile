@@ -48,6 +48,7 @@ RUN apk add --no-cache \
     libpng \
     libjpeg-turbo \
     freetype \
+    libwebp \
     libzip \
     libxml2 \
     oniguruma \
@@ -57,12 +58,13 @@ RUN apk add --no-cache \
     libzip-dev \
     libjpeg-turbo-dev \
     freetype-dev \
+    libwebp-dev \
     oniguruma-dev \
     libxml2-dev \
     $PHPIZE_DEPS
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) \
     intl \
     gd \
@@ -93,6 +95,9 @@ COPY --from=assets_builder /app/public/build ./public/build
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer dump-autoload --optimize --ignore-platform-reqs
 
+# Publish Filament assets
+RUN php artisan filament:assets && php artisan filament:upgrade
+
 # Configure Nginx
 COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
 
@@ -101,7 +106,7 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Setup permissions
 RUN mkdir -p /var/log/supervisor && \
-    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+    chown -R www-data:www-data /var/www/html
 
 # Setup Entrypoint
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh

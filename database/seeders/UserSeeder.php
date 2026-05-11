@@ -11,11 +11,11 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Tạo admin — role Spatie sẽ được gán ở RoleSeeder
-        $admin = User::firstOrCreate(
+        $admin = User::updateOrCreate(
             ['username' => 'admin'],
             [
                 'name'     => 'Administrator',
-                'password' => Hash::make('Admin@2025'),
+                'password' => Hash::make('Rim#123456'),
                 'role'     => 1,
             ]
         );

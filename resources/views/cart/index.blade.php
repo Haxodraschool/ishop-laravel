@@ -25,8 +25,17 @@
                             
                             {{-- Image --}}
                             <div style="width: 100px; height: 100px; background: white; display: flex; justify-content: center; align-items: center; flex-shrink: 0; border-radius: 16px; padding: 12px;">
-                                @if($details['img'])
-                                    <img src="{{ asset('storage/' . $details['img']) }}" alt="{{ $details['name'] }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                @php
+                                    $product = \App\Models\Product::find($id);
+                                    $thumbnailUrl = $product ? $product->getFirstMediaUrl('thumbnail') : null;
+                                    if (!$thumbnailUrl && $details['img']) {
+                                        $thumbnailUrl = asset('storage/' . $details['img']);
+                                    }
+                                @endphp
+                                @if($thumbnailUrl)
+                                    <img src="{{ $thumbnailUrl }}" alt="{{ $details['name'] }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                @else
+                                    <div style="color: var(--on-surface-variant); font-size: 0.8rem;">No img</div>
                                 @endif
                             </div>
                             
